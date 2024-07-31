@@ -8,4 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class Track extends Model
 {
     use HasFactory;
+
+    protected $fillable = ['name', 'album_id','album_name' , 'duration', 'file_url'];
+
+    public function album()
+    {
+        return $this->belongsTo(Album::class);
+    }
 }

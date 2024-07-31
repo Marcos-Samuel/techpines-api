@@ -6,25 +6,21 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up()
-    {
-    Schema::create('albums', function (Blueprint $table) {
+{
+    Schema::create('tracks', function (Blueprint $table) {
         $table->id();
         $table->string('name');
-        $table->date('release_date')->nullable();
+        $table->string('album_name')->nullable();
+        $table->string('duration')->nullable();
+        $table->string('music_url')->nullable();
+        $table->foreignId('album_id')->constrained('albums')->onDelete('cascade');
         $table->timestamps();
     });
-    }
+}
 
-
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
-        Schema::dropIfExists('albums');
+        Schema::dropIfExists('tracks');
     }
 };
