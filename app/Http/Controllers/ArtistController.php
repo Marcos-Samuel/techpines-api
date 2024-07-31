@@ -26,7 +26,7 @@ class ArtistController extends Controller
         } catch (ModelNotFoundException $e) {
             return response()->json(['message' => 'Artista não encontrado'], 404);
         } catch (Exception $e) {
-            return response()->json(['message' => 'Falha ao buscar artista'], 500);
+            return response()->json(['message' => $e], 500);
         }
 
     }
