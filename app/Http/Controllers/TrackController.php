@@ -73,4 +73,14 @@ class TrackController extends Controller
             return response()->json(['message' => 'Falha ao buscar musica'], 500);
         }
     }
+    public function getTracksByAlbumId($albumId)
+    {
+        try {
+            $tracks = Track::where('album_id', $albumId)->get();
+            return response()->json($tracks);
+        } catch (Exception $e) {
+            return response()->json(['error' => 'Tracks not found'], 404);
+        }
+    }
+
 }

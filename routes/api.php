@@ -15,3 +15,4 @@ Route::delete('/albums/{id}', [AlbumController::class, 'deleteAlbum']);
 Route::post('/tracks', [TrackController::class, 'addNewTrack']);
 Route::get('/tracks/{name}', [TrackController::class, 'listTrackByName']);
 Route::delete('/tracks/{id}', [TrackController::class, 'deleteTrack']);
+Route::get('/tracks/{albumId}', [TrackController::class, 'getTracksByAlbumId']);
