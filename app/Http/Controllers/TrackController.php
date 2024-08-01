@@ -30,14 +30,6 @@ class TrackController extends Controller
             $album = Album::findOrFail($request->input('album_id'));
             $track->album_name = $album->name;
 
-            if ($request->hasFile('music_url')) {
-                $file = $request->file('music_url');
-                $filePath = AudioHelper::storeFile($file);
-                $duration = AudioHelper::getDurationFromFile($file);
-
-                $track->music_url = Storage::url($filePath);
-                $track->duration = $duration;
-            }
 
             $track->save();
 
@@ -73,7 +65,7 @@ class TrackController extends Controller
             return response()->json(['message' => 'Falha ao buscar musica'], 500);
         }
     }
-    public function getTracksByAlbumId($albumId)
+    public function getTracksByAlbumId(string $albumId)
     {
         try {
             $tracks = Track::where('album_id', $albumId)->get();
