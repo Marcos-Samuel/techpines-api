@@ -1,6 +1,6 @@
 # Documentação da API
 ## 🚀 Deploy
-https://techpines-api-9e755958e791.herokuapp.com
+https://techpines-api-9e755958e791.herokuapp.com/api
 
 ## **1. Artistas**
 
