@@ -8,7 +8,6 @@ use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
 
 class AlbumController extends Controller
@@ -17,26 +16,26 @@ class AlbumController extends Controller
     {
         try {
             $albums = Album::where('name', 'like', '%' . $name . '%')
-            ->with('tracks')
-            ->get();
+                ->with('tracks')
+                ->get();
 
-        if ($albums->isEmpty()) {
-            return response()->json(['message' => 'Álbum não encontrado'], 404);
-        }
+            if ($albums->isEmpty()) {
+                return response()->json(['message' => 'Álbum não encontrado'], 404);
+            }
             return response()->json($albums, 200);
-        }  catch (Exception $e) {
-            return response()->json(['message' => $e] , 500);
+        } catch (Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 500);
         }
     }
 
     public function addNewAlbum(Request $request)
     {
-        try{
+        try {
             $request->validate([
                 'name' => 'required|string|max:255',
                 'artist_id' => 'required|exists:artists,id',
                 'release_year' => 'nullable|string',
-                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+                'image_url' => 'nullable|url'
             ]);
 
             $album = new Album();
@@ -47,33 +46,30 @@ class AlbumController extends Controller
             $artist = Artist::findOrFail($request->input('artist_id'));
             $album->artist_name = $artist->name;
 
-            if($request->hasFile('image')){
-                $imagePath = $request->file('image')->store('albums', 'public');
-                $album->image_url = Storage::url($imagePath);
+            if ($request->has('image_url')) {
+                $album->image_url = $request->input('image_url');
             }
 
             $album->save();
 
-            return response()->json($album,201);
+            return response()->json($album, 201);
 
-        }catch(ValidationException $e){
-            return response()->json(['message'=> $e->errors()],422);
+        } catch (ValidationException $e) {
+            return response()->json(['message' => $e->errors()], 422);
         } catch (Exception $e) {
-            return response()->json(['message' => $e ], 500);
+            return response()->json(['message' => $e->getMessage()], 500);
         }
-
     }
 
     public function deleteAlbum(string $id)
     {
         try {
             Album::findOrFail($id)->delete();
-            return response()->json(['message' => 'Album deletada com sucesso']);
+            return response()->json(['message' => 'Álbum deletado com sucesso']);
         } catch (ModelNotFoundException $e) {
-            return response()->json(['message'=> 'Album não encontrado'], 404);
+            return response()->json(['message' => 'Álbum não encontrado'], 404);
         } catch (Exception $e) {
-            return response()->json(['message' => 'Falha ao buscar albums'], 500);
+            return response()->json(['message' => 'Falha ao buscar álbum'], 500);
         }
-
     }
 }
